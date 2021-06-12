@@ -23,15 +23,24 @@ wss.on('connection', (ws: WebSocket) => {
 
     ws.on('message', (message: string) => {
         console.log(' msg xx', message);
-        let geneneratorConfig: Partial<Input> = {};
+        let generatorConfig: Partial<Input> = {};
 
         try {
-            geneneratorConfig = JSON.parse(message) as Partial<Input>
+            generatorConfig = JSON.parse(message);
+            console.log(generatorConfig);
+
+            if (messageSender) {
+                clearInterval(messageSender)
+            }
             messageSender = setInterval(() => {
                 counter.v++;
-                const result = generator.next({ second: counter.v, ...geneneratorConfig })
+                const result = generator.next({ second: counter.v, ...generatorConfig });
+                console.log(' sending ', result);
                 ws.send(`${result.value}`);
             }, 2000);
+
+
+
         } catch (error) {
             console.error(error);
             ws.send('unable to parse');

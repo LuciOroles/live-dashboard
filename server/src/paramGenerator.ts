@@ -8,9 +8,9 @@ export default function* paramGenerator() {
     };
 
     while (true) {
-        console.log(response, ' response');
         response = yield getParameter(response);
     }
+
 }
 
 

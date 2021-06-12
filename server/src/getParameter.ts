@@ -8,6 +8,10 @@ export type Input = {
 }
 
 
+function precise(x: number) {
+    return Number.parseFloat(x.toString()).toPrecision(4);
+}
+
 export default function getParameter(p: Input) {
 
     const {
@@ -20,8 +24,9 @@ export default function getParameter(p: Input) {
     if (stop) return 0;
     if (increase) {
         if (increase > 0.5 && increase < 0.75) {
-            return (bottom * increase) * Math.cos((Math.PI / 15) * second) + (top * increase);
+            return precise(
+                (bottom * increase) * Math.cos((Math.PI / 15) * second) + (top * increase));
         }
     }
-    return bottom * Math.cos((Math.PI / 15) * second) + top;
+    return precise(bottom * Math.cos((Math.PI / 15) * second) + top);
 };

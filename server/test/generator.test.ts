@@ -4,20 +4,20 @@ describe('paramter generator', () => {
 
         const generator = paramGenerator();
         for (let i = 0; i < 10; i++) {
-            expect(Number.isFinite(generator.next({ second: i }).value)).toBeTruthy();
+            expect(Number.isFinite(Number(generator.next({ second: i }).value))).toBeTruthy();
         }
     });
 
     test('sending stop will force the generator to return 0', () => {
         const generator = paramGenerator();
 
-        const v1 = generator.next({ second: 1 }).value;
+        const v1 = Number(generator.next({ second: 1 }).value);
         expect(v1).toBeGreaterThan(0);
 
-        const v2 = generator.next({ second: 2, stop: true }).value;
+        const v2 = Number(generator.next({ second: 2, stop: true }).value);
         expect(v2).toEqual(0);
 
-        const v3 = generator.next({ second: 99, stop: false }).value;
+        const v3 = Number(generator.next({ second: 99, stop: false }).value);
         expect(v3).toBeGreaterThan(90);
 
     })
