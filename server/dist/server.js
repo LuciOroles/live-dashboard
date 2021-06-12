@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
-const paramGenerator_1 = require("./paramGenerator");
+const paramGenerator_1 = require("./src/paramGenerator");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
@@ -18,18 +18,27 @@ wss.on('connection', (ws) => {
     const status = {
         stop: false,
     };
+    let outputMessage;
     ws.on('message', (message) => {
         console.log(' msg xx', message);
         if (message === 'stop')
             status.stop = true;
-        const sender = setInterval(() => {
+        if (message === 'start')
+            status.stop = false;
+        outputMessage = setInterval(() => {
             counter.v++;
             const result = generator.next({ second: counter.v, stop: status.stop });
-            if (counter.v === 130)
-                clearInterval(sender);
             ws.send(`${result.value}`);
-        }, 1000);
+        }, 2000);
     });
+    ws.on("close", () => {
+        generator.next({ second: 0, stop: true });
+        console.log(' ?close', outputMessage);
+        if (outputMessage) {
+            console.log(' clear close');
+            clearInterval(outputMessage);
+        }
+    }); // check how to close the conncetion
 });
 server.listen(PORT, () => console.log(`http://localhost:${PORT}`));
 //# sourceMappingURL=server.js.map

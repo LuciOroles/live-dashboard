@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
-import paramGenerator from './paramGenerator';
+import paramGenerator from './src/paramGenerator';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,12 +32,12 @@ wss.on('connection', (ws: WebSocket) => {
             const result = generator.next({ second: counter.v, stop: status.stop })
 
             ws.send(`${result.value}`);
-        }, 1000);
+        }, 2000);
     });
 
     ws.on("close", () => {
         generator.next({ second: 0, stop: true });
-        if (Number.isFinite(outputMessage)) {
+        if (outputMessage) {
             clearInterval(outputMessage)
         }
     });
