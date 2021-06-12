@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
+import { Input } from './src/getParameter';
 import paramGenerator from './src/paramGenerator';
 
 const app = express();
@@ -13,32 +14,37 @@ const wss = new WebSocket.Server({
 
 wss.on('connection', (ws: WebSocket) => {
     const counter = {
-        v: 0,
+        v: 1,
     };
     const generator = paramGenerator();
-    const status = {
-        stop: false,
-    };
-    let outputMessage: ReturnType<typeof setInterval>;
+    generator.next({ second: counter.v });
+    let messageSender: ReturnType<typeof setInterval>;
 
 
     ws.on('message', (message: string) => {
         console.log(' msg xx', message);
-        if (message === 'stop') status.stop = true;
-        if (message === 'start') status.stop = false;
+        let geneneratorConfig: Partial<Input> = {};
 
-        outputMessage = setInterval(() => {
-            counter.v++;
-            const result = generator.next({ second: counter.v, stop: status.stop })
+        try {
+            geneneratorConfig = JSON.parse(message) as Partial<Input>
+            messageSender = setInterval(() => {
+                counter.v++;
+                const result = generator.next({ second: counter.v, ...geneneratorConfig })
+                ws.send(`${result.value}`);
+            }, 2000);
+        } catch (error) {
+            console.error(error);
+            ws.send('unable to parse');
+        }
 
-            ws.send(`${result.value}`);
-        }, 2000);
+
     });
 
     ws.on("close", () => {
         generator.next({ second: 0, stop: true });
-        if (outputMessage) {
-            clearInterval(outputMessage)
+        if (messageSender) {
+            clearInterval(messageSender);
+
         }
     });
 });
