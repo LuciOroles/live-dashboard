@@ -21,6 +21,20 @@ wss.on('connection', (ws: WebSocket) => {
     const generator = paramGenerator();
     generator.next({ second: counter.v });
     let messageSender: ReturnType<typeof setInterval>;
+    let connectionState = false;
+
+    const communicate = (nextValue: Input) => {
+
+        return setInterval(() => {
+            counter.v++;
+            const result = generator.next({ ...nextValue, second: counter.v });
+            const data = {
+                parameter: result.value,
+                timeStamp: new Date().getTime(),
+            };
+            ws.send(JSON.stringify(data));
+        }, 2000);
+    }
 
 
     ws.on('message', (message: string) => {
@@ -31,43 +45,37 @@ wss.on('connection', (ws: WebSocket) => {
             generatorConfig = JSON.parse(message);
             console.log(generatorConfig);
             const configKeys = new Set(Object.keys(generatorConfig));
-            if (configKeys.has('connect') || configKeys.has('disconnect') || configKeys.has('stop')) {
+            if (configKeys.has('connect') || configKeys.has('disconnect') || configKeys.has('stop') || configKeys.has('increase')) {
 
                 if (messageSender) {
                     clearInterval(messageSender);
                 }
             }
+
+            if (connectionState && Number.isFinite(generatorConfig.increase)) {
+                const next: Input = {
+                    second: counter.v,
+                }
+                if (Number.isFinite(generatorConfig.increase)) {
+                    next.increase = Number(generatorConfig.increase)
+                }
+                messageSender = communicate(next);
+            }
+
             if (generatorConfig.connect || generatorConfig.stop === false) {
                 counter.v = 1;
-                messageSender = setInterval(() => {
-                    counter.v++;
-                    const result = generator.next({ second: counter.v });
-
-                    const data = {
-                        parameter: result.value,
-                        timeStamp: new Date().getTime(),
-                    };
-
-                    console.log(' sending ', data);
-                    ws.send(JSON.stringify(data));
-                }, 2000);
+                connectionState = true;
+                messageSender = communicate({ second: counter.v })
             }
 
             if (generatorConfig.disconnect) {
+                connectionState = false;
                 ws.close();
             }
 
             if (generatorConfig.stop) {
-                messageSender = setInterval(() => {
-                    counter.v = 1;
-                    const data = {
-                        parameter: 0,
-                        timeStamp: new Date().getTime(),
-                    };
-
-                    console.log('stoped ', data);
-                    ws.send(JSON.stringify(data));
-                }, 2000);
+                connectionState = false;
+                messageSender = messageSender = communicate({ second: counter.v, stop: true });
             }
 
 
