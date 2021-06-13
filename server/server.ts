@@ -12,6 +12,8 @@ const wss = new WebSocket.Server({
     server
 });
 
+
+
 wss.on('connection', (ws: WebSocket) => {
     const counter = {
         v: 1,
@@ -35,8 +37,14 @@ wss.on('connection', (ws: WebSocket) => {
             messageSender = setInterval(() => {
                 counter.v++;
                 const result = generator.next({ second: counter.v, ...generatorConfig });
-                console.log(' sending ', result);
-                ws.send(`${result.value}`);
+
+                const data = {
+                    parameter: result.value,
+                    timeStamp: new Date().getTime(),
+                };
+
+                console.log(' sending ', data);
+                ws.send(JSON.stringify(data));
             }, 2000);
 
 
