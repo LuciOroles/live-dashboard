@@ -30,30 +30,33 @@ type State = {
   sessionsLabels: string[];
 };
 
+const createLabel = (total: number) => {
+  const newLabel = new Array(total);
+  for (let i = 0; i < total; i++) {
+    newLabel[i] = (i + 1).toString();
+  }
+  return newLabel;
+};
+
 const dashboardReducer = (state: State, action: Action) => {
   switch (action.type) {
     case Actions.themeUpdate: {
       return { ...state, selectedTheme: action.payload };
     }
     case Actions.graphUpdate: {
-      const { sessions, graph, sessionsLabels } = state;
+      const { sessions, graph } = state;
 
-      if (graph.data.length === 12) {
-        const newLabels = graph.labels
-          .filter((label) => {
-            return sessionsLabels.indexOf(label) === -1;
-          })
-          .concat(sessionsLabels);
+      if (graph.data.length === 25) {
         return {
           ...state,
           graph: {
             labels: [],
             data: [],
           },
-          sessions: sessions.set(`{session - ${sessions.size}`, {
+          sessions: sessions.set(`session - ${sessions.size}`, {
             data: graph.data,
           }),
-          sessionsLabels: newLabels,
+          sessionsLabels: createLabel(25),
         };
       }
       return {

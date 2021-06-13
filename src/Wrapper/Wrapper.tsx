@@ -6,6 +6,7 @@ import ContaierUI from '../UI/ContainerUI';
 import Board from '../UI/Board';
 import WebSocketDemo from '../WebSocketDemo';
 import ChartUpdater from '../Chart/ChartUpdater';
+import HistoryUpdater from '../Chart/HistoryUpdater';
 
 interface NavigationProps {
   label: string;
@@ -35,6 +36,7 @@ const Navigation = ({ label, active, onClick }: NavigationProps) => {
 
 export default function Wrapper(): ReactElement {
   const [activeTab, setActiveTab] = useState<string>('A');
+
   let body = null;
 
   const header = (
@@ -66,16 +68,7 @@ export default function Wrapper(): ReactElement {
   }
 
   if (activeTab === 'B') {
-    body = (
-      <Board
-        left={<ChartUpdater />}
-        right={
-          <React.Fragment>
-            <h4>Test</h4>
-          </React.Fragment>
-        }
-      />
-    );
+    body = <Board left={<HistoryUpdater />} />;
   }
 
   return (

@@ -1,17 +1,22 @@
 import React, { ReactElement } from 'react';
 import { Line } from 'react-chartjs-2';
 
-const data = {
-  labels: ['1', '2', '3', '4', '5', '6'],
-  datasets: [
-    {
-      label: 'live',
-      data: [12, -19, 3, 5, 2, 3],
-      fill: false,
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgba(255, 99, 132, 0.2)',
-    },
-  ],
+export type DataSet = {
+  label: string;
+  data: number[];
+  fill?: false;
+  backgroundColor?: string;
+  borderColor?: string;
+};
+
+interface LineGraphData {
+  labels: string[];
+  datasets: DataSet[];
+}
+
+const data: LineGraphData = {
+  labels: [],
+  datasets: [],
 };
 
 const options = {
@@ -28,14 +33,33 @@ const options = {
 
 interface Props {
   labels: string[];
-  graphData: number[];
+  graphData?: number[];
+  graphDataSets?: DataSet[];
 }
 
-export default function DemoChart({ labels, graphData }: Props): ReactElement {
+export default function DemoChart({
+  labels,
+  graphData,
+  graphDataSets,
+}: Props): ReactElement {
   const lineChartData = { ...data };
 
-  lineChartData.labels = labels;
-  lineChartData.datasets[0].data = graphData;
+  if (graphData) {
+    lineChartData.labels = labels;
+    lineChartData.datasets = [
+      {
+        data: graphData,
+        label: 'live',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+      },
+    ];
+  }
+
+  if (graphDataSets) {
+    lineChartData.labels = labels;
+    lineChartData.datasets = graphDataSets;
+  }
 
   return (
     <div
