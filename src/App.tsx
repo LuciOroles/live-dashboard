@@ -10,6 +10,7 @@ import ChartUpdater from './Chart/ChartUpdater';
 import DashboardTheme from './Theme/DashboardTheme';
 import { DashboardProvider } from './Context';
 import ThemeUpdater from './Theme/ThemeUpdater';
+import Board from './UI/Board';
 
 function App() {
   return (
@@ -17,16 +18,18 @@ function App() {
       <DashboardTheme>
         <div className="App">
           <header>Dashboard</header>
+          <Board
+            left={<ChartUpdater />}
+            right={
+              <React.Fragment>
+                <ThemeUpdater />
+                <WebSocketDemo />
+              </React.Fragment>
+            }
+          />
+
           <section>
-            <ThemeUpdater />
-          </section>
-          <section>
-            <div>
-              <p>Dashboard goes here</p>
-            </div>
-            <WebSocketDemo />
             <DemoIntern />
-            <ChartUpdater />
           </section>
         </div>
       </DashboardTheme>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from 'theme-ui';
 
-import theme from '../theme';
-import themeDark from '../themeDark';
+import theme from './theme';
+import themeDark from './themeDark';
 import { useDashboardContext } from '../Context';
 
 const DashboardTheme: React.FC = ({ children }) => {
