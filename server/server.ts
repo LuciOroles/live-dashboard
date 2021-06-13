@@ -38,26 +38,25 @@ wss.on('connection', (ws: WebSocket) => {
 
 
     ws.on('message', (message: string) => {
-        console.log(' msg xx', message);
         let generatorConfig: Partial<Input> = {};
 
         try {
             generatorConfig = JSON.parse(message);
-            console.log(generatorConfig);
+
             const configKeys = new Set(Object.keys(generatorConfig));
-            if (configKeys.has('connect') || configKeys.has('disconnect') || configKeys.has('stop') || configKeys.has('increase')) {
+            if (configKeys.has('connect') || configKeys.has('disconnect') || configKeys.has('stop') || configKeys.has('factor')) {
 
                 if (messageSender) {
                     clearInterval(messageSender);
                 }
             }
 
-            if (connectionState && Number.isFinite(generatorConfig.increase)) {
+            if (connectionState && generatorConfig.factor) {
                 const next: Input = {
                     second: counter.v,
                 }
-                if (Number.isFinite(generatorConfig.increase)) {
-                    next.increase = Number(generatorConfig.increase)
+                if (typeof generatorConfig.factor === 'string') {
+                    next.factor = parseFloat(generatorConfig.factor)
                 }
                 messageSender = communicate(next);
             }

@@ -3,7 +3,7 @@ export type Input = {
     second: number,
     bottom?: number,
     top?: number,
-    increase?: number
+    factor?: number
     stop?: boolean,
     connect?: boolean,
     disconnect?: boolean,
@@ -21,15 +21,13 @@ export default function getParameter(p: Input) {
         second,
         bottom = -67.5,
         top = 69.4,
-        increase = 0,
+        factor = 1,
         stop = false
     } = p;
     if (stop) return 0;
-    if (increase) {
-        if (increase > 0.5 && increase < 0.75) {
-            return precise(
-                (bottom * increase) * Math.cos((Math.PI / 15) * second) + (top * increase));
-        }
+
+    if (factor > 0.5 && factor <= 1) {
+        return precise(
+            (bottom * factor) * Math.cos((Math.PI / 15) * second) + (top * factor));
     }
-    return precise(bottom * Math.cos((Math.PI / 15) * second) + top);
 };

@@ -11,8 +11,8 @@ export default function WebSocketDemo() {
 
   useWebsocketMessages(lastMessage);
 
-  const handleClickSendMessage = useCallback(
-    () => sendMessage(JSON.stringify(inputData)),
+  const updateFactor = useCallback(
+    () => sendMessage(JSON.stringify({ factor: inputData })),
     [inputData, sendMessage]
   );
 
@@ -61,6 +61,9 @@ export default function WebSocketDemo() {
             setInputData(e?.currentTarget.value);
           }}
         />
+        <button type="button" onClick={updateFactor}>
+          update factor
+        </button>
       </div>
       <span>Connection with controller is currently: {connectionStatus}</span>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
