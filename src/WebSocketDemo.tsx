@@ -2,11 +2,12 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 export default function WebSocketDemo() {
-  const [socketUrl, setSocketUrl] = useState('ws://localhost:5000');
   const messageHistory = useRef<string[]>([]);
   const [inputData, setInputData] = useState<string>('');
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(
+    'ws://localhost:5000'
+  );
   useEffect(() => {
     messageHistory.current = [];
   }, []);
@@ -22,11 +23,6 @@ export default function WebSocketDemo() {
       }
     }
   }, [lastMessage]);
-
-  const handleClickChangeSocketUrl = useCallback(
-    () => setSocketUrl('ws://localhost:5000'),
-    []
-  );
 
   const handleClickSendMessage = useCallback(
     () => sendMessage(JSON.stringify(inputData)),
@@ -47,9 +43,6 @@ export default function WebSocketDemo() {
 
   return (
     <div>
-      <button onClick={handleClickChangeSocketUrl}>
-        Click Me to change Socket Url
-      </button>
       <button
         onClick={handleClickSendMessage}
         disabled={readyState !== ReadyState.OPEN}
