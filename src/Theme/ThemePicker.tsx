@@ -4,17 +4,18 @@ import { Label, Radio } from 'theme-ui';
 export type ThemeElement = {
   label: string;
   id: string;
-  checked: boolean;
 };
 
 interface Props {
   onLabelChange: (e: ChangeEvent) => void;
   themeList: ThemeElement[];
+  selectedTheme: string;
 }
 
 export default function ThemePicker({
   onLabelChange,
   themeList,
+  selectedTheme,
 }: Props): ReactElement {
   return (
     <div>
@@ -24,7 +25,7 @@ export default function ThemePicker({
             <Radio
               name={theme.id}
               value={theme.id}
-              checked={theme.checked}
+              checked={theme.id === selectedTheme}
               onChange={onLabelChange}
             />
             {theme.label}
