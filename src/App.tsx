@@ -5,7 +5,7 @@ import './i18nInstance';
 
 import WebSocketDemo from './WebSocketDemo';
 import DemoIntern from './DemoIntern';
-import DemoChart from './DemoChart';
+import ChartUpdater from './Chart/ChartUpdater';
 
 import DashboardTheme from './Theme/DashboardTheme';
 import { DashboardProvider } from './Context';
@@ -26,7 +26,7 @@ function App() {
             </div>
             <WebSocketDemo />
             <DemoIntern />
-            <DemoChart />
+            <ChartUpdater />
           </section>
         </div>
       </DashboardTheme>

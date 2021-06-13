@@ -1,28 +1,15 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import useWebsocketMessages from './useWebsocketMessages';
 
 export default function WebSocketDemo() {
-  const messageHistory = useRef<string[]>([]);
   const [inputData, setInputData] = useState<string>('');
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'ws://localhost:5000'
   );
-  useEffect(() => {
-    messageHistory.current = [];
-  }, []);
 
-  useEffect(() => {
-    const lastIndex = messageHistory.current.length - 1;
-    if (lastMessage) {
-      if (
-        messageHistory.current[lastIndex] !== lastMessage.data ||
-        lastMessage.data === '0'
-      ) {
-        messageHistory.current = [...messageHistory.current, lastMessage.data];
-      }
-    }
-  }, [lastMessage]);
+  useWebsocketMessages(lastMessage);
 
   const handleClickSendMessage = useCallback(
     () => sendMessage(JSON.stringify(inputData)),
@@ -37,8 +24,8 @@ export default function WebSocketDemo() {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
-  const stopController = () => {
-    sendMessage(JSON.stringify({ stop: true }));
+  const updateController = (isStoped: boolean) => () => {
+    sendMessage(JSON.stringify({ stop: isStoped }));
   };
 
   return (
@@ -47,10 +34,13 @@ export default function WebSocketDemo() {
         onClick={handleClickSendMessage}
         disabled={readyState !== ReadyState.OPEN}
       >
-        Send Data
+        Get Data
       </button>
-      <button type="button" onClick={stopController}>
+      <button type="button" onClick={updateController(true)}>
         Stop
+      </button>
+      <button type="button" onClick={updateController(false)}>
+        Restart
       </button>
       <div>
         <input
@@ -61,13 +51,8 @@ export default function WebSocketDemo() {
           }}
         />
       </div>
-      <span>The WebSocket is currently {connectionStatus}</span>
+      <span>Connection with controller is currently: {connectionStatus}</span>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
-      <ul>
-        {messageHistory.current.map((message, idx) => (
-          <div key={idx}>{message}</div>
-        ))}
-      </ul>
     </div>
   );
 }

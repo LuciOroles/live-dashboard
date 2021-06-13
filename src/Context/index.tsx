@@ -5,16 +5,37 @@ enum Actions {
   graphUpdate,
 }
 
-type Action = { type: Actions.themeUpdate; payload: string };
+type Action =
+  | { type: Actions.themeUpdate; payload: string }
+  | {
+      type: Actions.graphUpdate;
+      payload: {
+        label: string;
+        data: number;
+      };
+    };
 type Dispatch = (action: Action) => void;
 type State = {
   selectedTheme: string;
+  graph: {
+    labels: string[];
+    data: number[];
+  };
 };
 
 const dashboardReducer = (state: State, action: Action) => {
   switch (action.type) {
     case Actions.themeUpdate: {
       return { ...state, selectedTheme: action.payload };
+    }
+    case Actions.graphUpdate: {
+      return {
+        ...state,
+        graph: {
+          labels: [...state.graph.labels, action.payload.label],
+          data: [...state.graph.data, action.payload.data],
+        },
+      };
     }
 
     default:
@@ -30,6 +51,10 @@ const DashboardContext =
 const DashboardProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(dashboardReducer, {
     selectedTheme: 'l1',
+    graph: {
+      labels: [],
+      data: [],
+    },
   });
 
   const value = {
