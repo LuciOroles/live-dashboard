@@ -28,19 +28,30 @@ export default function WebSocketDemo() {
     sendMessage(JSON.stringify({ stop: isStoped }));
   };
 
+  const connectToController = () => {
+    sendMessage(JSON.stringify({ connect: true }));
+  };
+
+  const disconnectToController = () => {
+    sendMessage(JSON.stringify({ disconnect: true }));
+  };
+
   return (
     <div>
       <button
-        onClick={handleClickSendMessage}
+        onClick={connectToController}
         disabled={readyState !== ReadyState.OPEN}
       >
-        Get Data
+        Connect
       </button>
       <button type="button" onClick={updateController(true)}>
         Stop
       </button>
       <button type="button" onClick={updateController(false)}>
         Restart
+      </button>
+      <button type="button" onClick={disconnectToController}>
+        Disconnect
       </button>
       <div>
         <input

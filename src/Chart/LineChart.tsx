@@ -40,7 +40,7 @@ export default function DemoChart({ labels, graphData }: Props): ReactElement {
   return (
     <div
       style={{
-        maxWidth: '400px',
+        maxWidth: '800px',
       }}
     >
       <Line type="line" data={lineChartData} options={options} />

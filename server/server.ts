@@ -30,23 +30,45 @@ wss.on('connection', (ws: WebSocket) => {
         try {
             generatorConfig = JSON.parse(message);
             console.log(generatorConfig);
+            const configKeys = new Set(Object.keys(generatorConfig));
+            if (configKeys.has('connect') || configKeys.has('disconnect') || configKeys.has('stop')) {
 
-            if (messageSender) {
-                clearInterval(messageSender)
+                if (messageSender) {
+                    clearInterval(messageSender);
+                }
             }
-            messageSender = setInterval(() => {
-                counter.v++;
-                const result = generator.next({ second: counter.v, ...generatorConfig });
+            if (generatorConfig.connect || generatorConfig.stop === false) {
+                counter.v = 1;
+                messageSender = setInterval(() => {
+                    counter.v++;
+                    const result = generator.next({ second: counter.v });
 
-                const data = {
-                    parameter: result.value,
-                    timeStamp: new Date().getTime(),
-                };
+                    const data = {
+                        parameter: result.value,
+                        timeStamp: new Date().getTime(),
+                    };
 
-                console.log(' sending ', data);
-                ws.send(JSON.stringify(data));
-            }, 2000);
+                    console.log(' sending ', data);
+                    ws.send(JSON.stringify(data));
+                }, 2000);
+            }
 
+            if (generatorConfig.disconnect) {
+                ws.close();
+            }
+
+            if (generatorConfig.stop) {
+                messageSender = setInterval(() => {
+                    counter.v = 1;
+                    const data = {
+                        parameter: 0,
+                        timeStamp: new Date().getTime(),
+                    };
+
+                    console.log('stoped ', data);
+                    ws.send(JSON.stringify(data));
+                }, 2000);
+            }
 
 
         } catch (error) {

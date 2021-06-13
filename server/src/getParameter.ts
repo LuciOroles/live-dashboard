@@ -4,7 +4,10 @@ export type Input = {
     bottom?: number,
     top?: number,
     increase?: number
-    stop?: boolean
+    stop?: boolean,
+    connect?: boolean,
+    disconnect?: boolean,
+
 }
 
 
