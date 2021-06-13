@@ -3,6 +3,7 @@ import React, { useContext, useReducer } from 'react';
 enum Actions {
   themeUpdate,
   graphUpdate,
+  updateSessions,
 }
 
 type Action =
@@ -15,12 +16,18 @@ type Action =
       };
     };
 type Dispatch = (action: Action) => void;
+type GraphData = {
+  data: number[];
+};
+
 type State = {
   selectedTheme: string;
   graph: {
     labels: string[];
     data: number[];
   };
+  sessions: Map<string, GraphData>;
+  sessionsLabels: string[];
 };
 
 const dashboardReducer = (state: State, action: Action) => {
@@ -29,6 +36,26 @@ const dashboardReducer = (state: State, action: Action) => {
       return { ...state, selectedTheme: action.payload };
     }
     case Actions.graphUpdate: {
+      const { sessions, graph, sessionsLabels } = state;
+
+      if (graph.data.length === 12) {
+        const newLabels = graph.labels
+          .filter((label) => {
+            return sessionsLabels.indexOf(label) === -1;
+          })
+          .concat(sessionsLabels);
+        return {
+          ...state,
+          graph: {
+            labels: [],
+            data: [],
+          },
+          sessions: sessions.set(`{session - ${sessions.size}`, {
+            data: graph.data,
+          }),
+          sessionsLabels: newLabels,
+        };
+      }
       return {
         ...state,
         graph: {
@@ -55,6 +82,8 @@ const DashboardProvider: React.FC = ({ children }) => {
       labels: [],
       data: [],
     },
+    sessions: new Map(),
+    sessionsLabels: [],
   });
 
   const value = {
