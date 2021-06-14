@@ -8,21 +8,22 @@ import ControlPanel from '../ControlPanel';
 import ChartUpdater from '../Chart/ChartUpdater';
 import HistoryUpdater from '../Chart/HistoryUpdater';
 import Navigation from '../UI/Navigation';
+import { useTranslation } from 'react-i18next';
 
 export default function Wrapper(): ReactElement {
   const [activeTab, setActiveTab] = useState<string>('A');
-
+  const { t } = useTranslation();
   let body = null;
 
   const header = (
     <Flex as="nav">
       <Navigation
-        label="Live Data"
+        label={t('live')}
         active={activeTab === 'A'}
         onClick={() => setActiveTab('A')}
       />
       <Navigation
-        label="History "
+        label={t('history')}
         active={activeTab === 'B'}
         onClick={() => setActiveTab('B')}
       />

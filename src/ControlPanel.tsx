@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import useWebsocketMessages from './useWebsocketMessages';
 import { Button } from 'theme-ui';
+import { useTranslation } from 'react-i18next';
 
 export default function ControlPanel() {
   const [inputData, setInputData] = useState<string>('');
@@ -10,6 +11,7 @@ export default function ControlPanel() {
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'ws://localhost:5000'
   );
+  const { t } = useTranslation();
 
   useWebsocketMessages(lastMessage);
 
@@ -51,24 +53,24 @@ export default function ControlPanel() {
       <div className="ctrlBtn">
         {(!getsData || connectionClosed) && (
           <Button onClick={handleConnect} className="panelBtn" sx={margins}>
-            Connect
+            {t('buttons.connect')}
           </Button>
         )}
         {getsData && (
           <Button sx={margins} onClick={handleDisconnect}>
-            Disconnect
+            {t('buttons.disconnect')}
           </Button>
         )}
       </div>
       <div className="ctrlBtn">
         {getsData && !stoped && (
           <Button type="button" onClick={updateController(true)} sx={margins}>
-            Stop
+            {t('buttons.stop')}
           </Button>
         )}
         {stoped && (
           <Button type="button" onClick={updateController(false)} sx={margins}>
-            Restart
+            {t('buttons.restart')}
           </Button>
         )}
       </div>
@@ -86,7 +88,7 @@ export default function ControlPanel() {
             className="updateFactor"
           />
           <Button type="button" onClick={updateFactor}>
-            Update Factor
+            {t('buttons.update')}
           </Button>
         </div>
       )}

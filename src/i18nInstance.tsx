@@ -5,18 +5,42 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources: {
-      en: {
-        translation: {
-          Welcome: 'Welcome to React and react-i18next',
-        },
-      },
       fr: {
         translation: {
-          Welcome: 'Bienvenue à React et react-i18next',
+          live: 'Live Data',
+          history: 'History data',
+          buttons: {
+            connect: 'Connect',
+            disconnect: 'Disconnect!',
+            stop: 'Stop',
+            restart: 'Restart',
+            update: 'Factor update',
+          },
+          noData: {
+            live: 'No live data!',
+            history: 'No historical data, stay connected to collect!',
+          },
+        },
+      },
+      en: {
+        translation: {
+          live: 'Live Data',
+          history: 'History data',
+          buttons: {
+            connect: 'Connect',
+            disconnect: 'Disconnect!',
+            stop: 'Stop',
+            restart: 'Restart',
+            update: 'Factor update',
+          },
+          noData: {
+            live: 'No live data!',
+            history: 'No historical data, stay connected to collect!',
+          },
         },
       },
     },
-    fallbackLng: 'fr',
+    fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     },
