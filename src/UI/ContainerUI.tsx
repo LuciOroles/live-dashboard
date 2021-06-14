@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from 'theme-ui';
+import './ui.css';
 
 const UIContainer: React.FC = ({ children }) => {
   return (
@@ -8,6 +9,7 @@ const UIContainer: React.FC = ({ children }) => {
       sx={{
         maxWidth: '860px',
       }}
+      className="shadow"
     >
       {children}
     </Container>

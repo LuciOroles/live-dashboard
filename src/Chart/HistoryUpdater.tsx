@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { useDashboardContext } from '../Context';
 import LineChart, { DataSet } from './LineChart';
+import Fallback from './Fallback';
 
 export default function HistoryUpdater(): ReactElement {
   const { state } = useDashboardContext();
@@ -15,6 +16,10 @@ export default function HistoryUpdater(): ReactElement {
       borderColor: `rgb(${r}, ${g}, 132)`,
     });
   });
+
+  if (graphDataSets.length === 0) {
+    return <Fallback label="No historical data, connect to collect!" />;
+  }
   return (
     <LineChart graphDataSets={graphDataSets} labels={state.sessionsLabels} />
   );

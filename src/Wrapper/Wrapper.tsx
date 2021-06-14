@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { Flex, NavLink, useThemeUI } from 'theme-ui';
+import { Flex } from 'theme-ui';
 
 import ContaierUI from '../UI/ContainerUI';
 
@@ -7,32 +7,7 @@ import Board from '../UI/Board';
 import WebSocketDemo from '../WebSocketDemo';
 import ChartUpdater from '../Chart/ChartUpdater';
 import HistoryUpdater from '../Chart/HistoryUpdater';
-
-interface NavigationProps {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}
-
-const Navigation = ({ label, active, onClick }: NavigationProps) => {
-  const context = useThemeUI();
-  const { theme } = context;
-  const secondary = theme.colors?.secondary;
-  const backgroundColor = active ? secondary ?? 'transparent' : 'transparent';
-  return (
-    <NavLink
-      p={2}
-      onClick={onClick}
-      sx={{
-        backgroundColor: backgroundColor,
-        cursor: 'pointer',
-        borderRadius: '10px',
-      }}
-    >
-      {label}
-    </NavLink>
-  );
-};
+import Navigation from '../UI/Navigation';
 
 export default function Wrapper(): ReactElement {
   const [activeTab, setActiveTab] = useState<string>('A');
