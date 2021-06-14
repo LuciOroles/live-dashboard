@@ -4,7 +4,7 @@ import { Flex } from 'theme-ui';
 import ContaierUI from '../UI/ContainerUI';
 
 import Board from '../UI/Board';
-import WebSocketDemo from '../WebSocketDemo';
+import ControlPanel from '../ControlPanel';
 import ChartUpdater from '../Chart/ChartUpdater';
 import HistoryUpdater from '../Chart/HistoryUpdater';
 import Navigation from '../UI/Navigation';
@@ -35,7 +35,7 @@ export default function Wrapper(): ReactElement {
         left={<ChartUpdater />}
         right={
           <React.Fragment>
-            <WebSocketDemo />
+            <ControlPanel />
           </React.Fragment>
         }
       />

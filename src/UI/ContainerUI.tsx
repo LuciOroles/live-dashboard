@@ -7,7 +7,7 @@ const UIContainer: React.FC = ({ children }) => {
     <Container
       p={4}
       sx={{
-        maxWidth: '860px',
+        maxWidth: '900px',
       }}
       className="shadow"
     >
